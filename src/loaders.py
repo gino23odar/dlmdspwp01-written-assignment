@@ -6,16 +6,25 @@ import pandas as pd
 from src.exceptions import DataLoadError, DataValidationError
 
 class DataLoader:
-    # Load and validat data from csv source files
+    # base class for inheritance requirement
+
+    def __init__(self, path: str | Path) -> None:
+        self.path = Path(path)
+
+    def validate_file_exists(self) -> None:
+        if not self.path.exists():
+            raise DataLoadError(f"File not found: {self.path}")
+
+class CSVDataLoader(DataLoader):
+    # load and validate data from csv source files
     
     def __init__(self, path: str | Path, required_columns: list[str]) -> None:
-        self.path = Path(path)
+        super().__init__(path)
         self.required_columns = required_columns
 
     def load(self) -> pd.DataFrame:
         # Loasd the csv file and validate structure
-        if not self.path.exists():
-            raise DataLoadError(f"File not found: {self.path}")
+        self.validate_file_exists()
 
         try:
             dataframe = pd.read_csv(self.path)
