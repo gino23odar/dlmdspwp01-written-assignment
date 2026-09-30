@@ -3,20 +3,22 @@ from src.loaders import DataLoader
 def main() -> None:
     # load the supplied datasets
 
-    training_data = DataLoader("data/train.csv").load()
+    training_data = DataLoader("data/train.csv", ["x", "y1", "y2", "y3", "y4"],).load()
 
-    ideal_data = DataLoader("data/ideal.csv").load()
+    ideal_columns = [
+        "x",
+        *[f"y{i}" for i in range(1, 51)],
+    ]
 
-    test_data = DataLoader("data/test.csv").load()
+    ideal_data = DataLoader("data/ideal.csv", ideal_columns).load()
 
-    print("Training data:")
-    print(training_data.head())
+    test_data = DataLoader("data/test.csv", ["x", "y"]).load()
 
-    print("Ideal data:")
-    print(ideal_data.head())
+    print(f"Training dataset: {training_data.shape}")
 
-    print("Test data:")
-    print(test_data.head())
+    print(f"Ideal dataset: {ideal_data.shape}")
+
+    print(f"Test dataset: {test_data.shape}")
 
 
 if __name__ == "__main__":
