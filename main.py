@@ -1,7 +1,7 @@
 from pathlib import Path
 from src.loaders import CSVDataLoader
 
-from src.database import create_database
+from src.database import DatabaseManager
 
 def main() -> None:
     # load the supplied datasets
@@ -27,9 +27,18 @@ def main() -> None:
         exist_ok=True
     )
 
-    create_database(
+    database = DatabaseManager(
+        "output/assignment.db"
+    )
+
+    database.save_dataframe(
         training_data,
+        "training_data",
+    )
+
+    database.save_dataframe(
         ideal_data,
+        "ideal_functions",
     )
 
 
