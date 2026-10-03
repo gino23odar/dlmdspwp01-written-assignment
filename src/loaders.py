@@ -3,7 +3,7 @@
 from pathlib import Path
 import pandas as pd
 
-from src.exceptions import DataLoadError, DataValidationError
+from src.exceptions import DataLoadError, DataValidationException
 
 class DataLoader:
     # base class for inheritance requirement
@@ -34,9 +34,9 @@ class CSVDataLoader(DataLoader):
 
         missing_columns = [column for column in self.required_columns if column not in dataframe.columns]
         if missing_columns:
-            raise DataValidationError(f"Missing required columns in {self.path}: {missing_columns}")
+            raise DataValidationException(f"Missing required columns in {self.path}: {missing_columns}")
         if dataframe.empty:
-            raise DataValidationError(f"Dataframe loaded from {self.path} is empty.")
+            raise DataValidationException(f"Dataframe loaded from {self.path} is empty.")
 
         return dataframe
 

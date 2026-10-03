@@ -5,7 +5,7 @@ class DataLoadError(Exception):
     """Raised when an input dataset cannot be loaded."""
 
 
-class DataValidationError(Exception):
+class DataValidationException(Exception):
     """Raised when an input dataset has an invalid structure."""
 
 

@@ -1,7 +1,7 @@
 from pathlib import Path
 from src.loaders import CSVDataLoader
 from src.database import DatabaseManager
-from src.selector import select_ideal_functions
+from src.selector import IdealFunctionSelector
 
 def main() -> None:
     # load the supplied datasets
@@ -38,18 +38,18 @@ def main() -> None:
         "ideal_functions",
     )
 
-    selections = select_ideal_functions(
-        training_data,
-        ideal_data,
-    )
+    selector = IdealFunctionSelector(training_data, ideal_data)
+    selections = selector.select()
 
     print("\nSelected ideal functions:")
 
     for selection in selections:
         print(
-            f"{selection['training_function']} -> "
-            f"{selection['ideal_function']} "
-            f"(SSE={selection['sse']:.6f})"
+            f"{selection.training_func} -> "
+            f"{selection.ideal_func} "
+            f"(SSE={selection.sse:.6f}, "
+            f"max deviation={selection.max_deviation:.6f}, "
+            f"threshold={selection.threshold:.6f})"
         )
     database.close()
 
