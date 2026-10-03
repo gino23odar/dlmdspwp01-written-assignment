@@ -2,6 +2,7 @@ from pathlib import Path
 from src.loaders import CSVDataLoader
 
 from src.database import DatabaseManager
+from src.selector import find_best_ideal_function
 
 def main() -> None:
     # load the supplied datasets
@@ -39,6 +40,16 @@ def main() -> None:
     database.save_dataframe(
         ideal_data,
         "ideal_functions",
+    )
+
+    best_function, sse = find_best_ideal_function(
+        training_data["y1"],
+        ideal_data,
+    )
+
+    print(
+        f"Best ideal function for y1: "
+        f"{best_function} (SSE={sse:.6f})"
     )
 
 
