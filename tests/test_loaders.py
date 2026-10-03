@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.exceptions import DataLoadError, DataValidationError
+from src.exceptions import DataLoadError, DataValidationException
 from src.loaders import CSVDataLoader
 
 class TestDataLoader(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestDataLoader(unittest.TestCase):
             pd.DataFrame({"x": [1.0]}).to_csv(path, index=False)
 
             loader = CSVDataLoader(path, ["x", "y"])
-            with self.assertRaises(DataValidationError):
+            with self.assertRaises(DataValidationException):
                 loader.load()
 
 if __name__ == "__main__":

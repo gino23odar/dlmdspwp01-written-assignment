@@ -1,17 +1,15 @@
 import unittest
+import math
 import pandas as pd
 
-from src.selector import (
-    calculate_sse,
-    select_ideal_functions,
-)
+from src.selector import IdealFunctionSelector
 
 class TestIdealFunctionSelection(unittest.TestCase):
     
     def test_calculate_sse(self):
         training = pd.Series([1.0, 2.0, 3.0])
         ideal = pd.Series([1.0, 2.0, 4.0])
-        result = calculate_sse(training, ideal)
+        result = (IdealFunctionSelector.calculate_sse(training, ideal))
 
         self.assertAlmostEqual(result, 1.0)
 
@@ -19,26 +17,25 @@ class TestIdealFunctionSelection(unittest.TestCase):
         training = pd.DataFrame({
             "x": [0.0, 1.0, 2.0],
             "y1": [1.0, 2.0, 3.0],
-            "y2": [4.0, 5.0, 6.0],
         })
 
         ideal = pd.DataFrame({
             "x": [0.0, 1.0, 2.0],
             "y1": [10.0, 20.0, 30.0],
             "y2": [1.0, 2.0, 3.1],
-            "y3": [4.1, 5.0, 6.0]
         })
 
-        results = select_ideal_functions(training, ideal)
+        selector = IdealFunctionSelector(training, ideal).select()
 
-        self.assertEqual(len(results), 2)
+        self.assertEqual(len(selector), 1)
 
-        results_by_training = {result["training_function"]: result for result in results}
+        results = selector[0]
 
-        self.assertEqual(results_by_training["y1"]["ideal_function"], "y2")
-        self.assertAlmostEqual(results_by_training["y1"]["sse"], 0.01)
-        self.assertEqual(results_by_training["y2"]["ideal_function"], "y3")
-        self.assertAlmostEqual(results_by_training["y2"]["sse"], 0.01)
+        self.assertEqual(results.training_func, "y1")
+        self.assertEqual(results.ideal_func, "y2")
+        self.assertAlmostEqual(results.sse, 0.01)
+        self.assertAlmostEqual(results.max_deviation, 0.1)
+        self.assertAlmostEqual(results.threshold, 0.1*math.sqrt(2))
 
 if __name__ == "__main__":
     unittest.main()
