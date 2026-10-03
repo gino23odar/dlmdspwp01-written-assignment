@@ -2,6 +2,7 @@ from pathlib import Path
 from src.loaders import CSVDataLoader
 from src.database import DatabaseManager
 from src.selector import IdealFunctionSelector
+from src.mapper import TestPointMapper
 
 def main() -> None:
     # load the supplied datasets
@@ -41,7 +42,11 @@ def main() -> None:
     selector = IdealFunctionSelector(training_data, ideal_data)
     selections = selector.select()
 
-    print("\nSelected ideal functions:")
+    mapper = TestPointMapper(ideal_data, selections)
+
+    mapped_data = mapper.map_points(test_data)
+
+    print(f"\nMapped test points: " f"\nMapped test points: " f"{len(mapped_data)} / {len(test_data)}")
 
     for selection in selections:
         print(
