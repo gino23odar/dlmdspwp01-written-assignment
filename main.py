@@ -1,8 +1,7 @@
 from pathlib import Path
 from src.loaders import CSVDataLoader
-
 from src.database import DatabaseManager
-from src.selector import find_best_ideal_function
+from src.selector import select_ideal_functions
 
 def main() -> None:
     # load the supplied datasets
@@ -15,13 +14,10 @@ def main() -> None:
     ]
 
     ideal_data = CSVDataLoader("data/ideal.csv", ideal_columns).load()
-
     test_data = CSVDataLoader("data/test.csv", ["x", "y"]).load()
 
     print(f"Training dataset: {training_data.shape}")
-
     print(f"Ideal dataset: {ideal_data.shape}")
-
     print(f"Test dataset: {test_data.shape}")
 
     Path("output").mkdir(
@@ -42,16 +38,20 @@ def main() -> None:
         "ideal_functions",
     )
 
-    best_function, sse = find_best_ideal_function(
-        training_data["y1"],
+    selections = select_ideal_functions(
+        training_data,
         ideal_data,
     )
 
-    print(
-        f"Best ideal function for y1: "
-        f"{best_function} (SSE={sse:.6f})"
-    )
+    print("\nSelected ideal functions:")
 
+    for selection in selections:
+        print(
+            f"{selection['training_function']} -> "
+            f"{selection['ideal_function']} "
+            f"(SSE={selection['sse']:.6f})"
+        )
+    database.close()
 
 if __name__ == "__main__":
     main()

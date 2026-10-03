@@ -37,3 +37,30 @@ def find_best_ideal_function(
             best_function = column
 
     return best_function, best_sse
+
+def select_ideal_functions(
+    training_data: pd.DataFrame,
+    ideal_data: pd.DataFrame,
+) -> list[dict]:
+    """Select one ideal function for each training function."""
+
+    results = []
+
+    for training_column in training_data.columns:
+        if training_column == "x":
+            continue
+
+        best_function, sse = find_best_ideal_function(
+            training_data[training_column],
+            ideal_data,
+        )
+
+        results.append(
+            {
+                "training_function": training_column,
+                "ideal_function": best_function,
+                "sse": sse,
+            }
+        )
+
+    return results
