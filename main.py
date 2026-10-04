@@ -50,7 +50,7 @@ def main() -> None:
     database.save_dataframe(mapped_data, "test_results")
 
     visualizer = AssignmentVisualizer("output/visualization.html")
-    visualization_path = visualizer.create(training_data, ideal_data, selections)
+    visualization_path = visualizer.create(training_data, ideal_data, test_data, mapped_data, selections)
     print(f"Visualization saved to: {visualization_path}")
 
     print(f"\nMapped test points: " f"\nMapped test points: " f"{len(mapped_data)} / {len(test_data)}")
