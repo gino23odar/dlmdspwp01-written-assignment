@@ -3,6 +3,7 @@ from src.loaders import CSVDataLoader
 from src.database import DatabaseManager
 from src.selector import IdealFunctionSelector
 from src.mapper import TestPointMapper
+from src.visualizer import AssignmentVisualizer
 
 def main() -> None:
     # load the supplied datasets
@@ -47,6 +48,10 @@ def main() -> None:
     mapped_data = mapper.map_points(test_data)
 
     database.save_dataframe(mapped_data, "test_results")
+
+    visualizer = AssignmentVisualizer("output/visualization.html")
+    visualization_path = visualizer.create(training_data, ideal_data, selections)
+    print(f"Visualization saved to: {visualization_path}")
 
     print(f"\nMapped test points: " f"\nMapped test points: " f"{len(mapped_data)} / {len(test_data)}")
 
