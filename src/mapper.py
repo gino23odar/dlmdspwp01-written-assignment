@@ -1,10 +1,13 @@
 import pandas as pd
 
 from src.selector import SelectionResult
+from src.exceptions import MappingError
 
 
 class TestPointMapper:
     # map test obs to selected functions
+
+    __test__ = False
 
     def __init__(self, ideal_data: pd.DataFrame, selection_results: list[SelectionResult]) -> None:
         self.ideal_data = ideal_data
@@ -20,11 +23,19 @@ class TestPointMapper:
         # map the test points that pass deviation threshold
 
         ideal = (self.ideal_data.set_index("x"))
+        if not ideal.index.is_unique:
+            raise MappingError("Ideal dataset must have unique x-values.")
+        
         mapped_rows = []
 
         for row in test_data.itertuples(index=False):
             x_val = float(row.x)
             y_val = float(row.y)
+
+            if x_val not in ideal.index:
+                raise MappingError(f"Test point no ideal-func value exists for x-value {x_val}")
+
+            candidates = []
 
             for selection in self.selections:
                 ideal_y = ideal.at[x_val, selection.ideal_func]
@@ -32,6 +43,11 @@ class TestPointMapper:
                 deviation = abs(y_val - ideal_y)
 
                 if(deviation <= selection.threshold):
+                    candidates.append((deviation, selection))
+
+            if candidates:
+                    deviation, selection = min(candidates, key=lambda item: item[0])
+                    
                     mapped_rows.append(
                         {
                             "x": x_val,
