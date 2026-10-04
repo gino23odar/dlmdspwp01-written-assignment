@@ -46,6 +46,8 @@ def main() -> None:
 
     mapped_data = mapper.map_points(test_data)
 
+    database.save_dataframe(mapped_data, "test_results")
+
     print(f"\nMapped test points: " f"\nMapped test points: " f"{len(mapped_data)} / {len(test_data)}")
 
     for selection in selections:
