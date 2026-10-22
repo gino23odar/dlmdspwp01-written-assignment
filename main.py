@@ -23,7 +23,7 @@ def main() -> None:
     test_data = CSVDataLoader(DATA_DIR/"test.csv", test_columns).load()
 
     database = DatabaseManager(
-        "OUTPUT_DIR/assignment.db"
+        OUTPUT_DIR / "assignment.db"
     )
 
     try:
