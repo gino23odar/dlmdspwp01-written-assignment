@@ -47,7 +47,7 @@ class TestPointMapper:
 
             if candidates:
                     deviation, selection = min(candidates, key=lambda item: item[0])
-                    
+
                     mapped_rows.append(
                         {
                             "x": x_val,
@@ -57,6 +57,5 @@ class TestPointMapper:
                         }
                     )
 
-                    break
 
         return pd.DataFrame(mapped_rows, columns=["x", "y", "delta_y", "ideal_func"])

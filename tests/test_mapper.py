@@ -99,5 +99,54 @@ class TestTestPointMapper(unittest.TestCase):
         with self.assertRaises(MappingError):
             mapper.map_points(test)
 
+    def test_processes_all_test_rows(self):
+        # Verify processing continues after an accepted observation
+
+        ideal = pd.DataFrame({
+            "x": [0.0, 1.0, 2.0],
+            "y1": [10.0, 20.0, 30.0],
+            "y2": [100.0, 200.0, 300.0],
+        })
+
+        test = pd.DataFrame({
+            "x": [0.0, 1.0, 2.0],
+            "y": [10.05, 999.0, 299.95],
+        })
+
+        selections = [
+            SelectionResult(
+                training_func="y1",
+                ideal_func="y1",
+                sse=0.0,
+                max_deviation=0.05,
+                threshold=0.1,
+            ),
+            SelectionResult(
+                training_func="y2",
+                ideal_func="y2",
+                sse=0.0,
+                max_deviation=0.05,
+                threshold=0.1,
+            ),
+        ]
+
+        mapper = TestPointMapper(ideal, selections)
+        result = mapper.map_points(test)
+
+        self.assertEqual(len(result), 2)
+
+        self.assertEqual(
+            result["ideal_func"].tolist(),
+            [1, 2],
+        )
+
+        self.assertEqual(
+            result["x"].tolist(),
+            [0.0, 2.0],
+        )
+
+        for deviation in result["delta_y"]:
+            self.assertAlmostEqual(deviation, 0.05)
+
 if __name__ == "__main__":
     unittest.main()
