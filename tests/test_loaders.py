@@ -34,5 +34,16 @@ class TestDataLoader(unittest.TestCase):
             with self.assertRaises(DataValidationException):
                 loader.load()
 
+    def test_missing_values_raise_validation_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/"data.csv"
+
+            pd.DataFrame({"x": [1.0, 2.0], "y": [3.0, None]}).to_csv(path, index=False)
+
+            loader = CSVDataLoader(path, ["x", "y"])
+
+            with self.assertRaises(DataValidationException):
+                loader.load()
+
 if __name__ == "__main__":
     unittest.main()

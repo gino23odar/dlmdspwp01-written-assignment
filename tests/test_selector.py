@@ -3,6 +3,7 @@ import math
 import pandas as pd
 
 from src.selector import IdealFunctionSelector
+from src.exceptions import DataValidationException
 
 class TestIdealFunctionSelection(unittest.TestCase):
     
@@ -36,6 +37,16 @@ class TestIdealFunctionSelection(unittest.TestCase):
         self.assertAlmostEqual(results.sse, 0.01)
         self.assertAlmostEqual(results.max_deviation, 0.1)
         self.assertAlmostEqual(results.threshold, 0.1*math.sqrt(2))
+
+    def test_different_x_vals_raise_validation_error(self):
+        training = pd.DataFrame({"x": [0.0, 1.0], "y": [1.0, 2.0]})
+        ideal = pd.DataFrame({"x": [0.0, 2.0], "y1": [1.0, 2.0]})
+
+        selector = IdealFunctionSelector(training, ideal)
+
+        with self.assertRaises(DataValidationException):
+            selector.select()
+
 
 if __name__ == "__main__":
     unittest.main()

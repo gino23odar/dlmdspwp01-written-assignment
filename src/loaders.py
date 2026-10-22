@@ -37,6 +37,8 @@ class CSVDataLoader(DataLoader):
             raise DataValidationException(f"Missing required columns in {self.path}: {missing_columns}")
         if dataframe.empty:
             raise DataValidationException(f"Dataframe loaded from {self.path} is empty.")
+        if dataframe[self.required_columns].isnull().any().any():
+            raise DataValidationException(f"{self.path.name} contains missing values")
 
         return dataframe
 
