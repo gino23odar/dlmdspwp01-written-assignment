@@ -82,7 +82,6 @@ class AssignmentVisualizer:
                 plot.scatter(
                     assigned["x"],
                     assigned["y"],
-                    ideal_y_vals,
                     legend_label="Assigned Points",
                     size=8,
                     alpha=0.8,
