@@ -82,12 +82,30 @@ The test-results table stores:
 x
 y
 delta_y
-ideal_function
+ideal_func
 ```
 ## Running the tests:
 
 ```powershell
 python -m unittest discover -s tests -v
+```
+
+## Generating Report Figures
+
+First, execute the complete application from the project root to generate the SQLite database, then generate the report figures:
+
+```powershell
+python scripts/generate_report_figures.py
+```
+
+This creates two interactive HTML files:
+
+```text
+output/
+├── assignment.db
+├── visualization.html
+├── report_figure1.html
+└── report_figure2.html
 ```
 
 ## Project Structure
